@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  prototype-gateway:
+    image: d2-core/prototype-gateway:1.0.0
+    ports:
+      - "9090:9090"
+    networks:
+      - prototype
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+
+networks:
+  prototype:
+    external: true

@@ -1,19 +1,38 @@
 version: "3.7"
 services:
-  mysql:
-    container_name: mysql
-    image: ubuntu/mysql:edge
-    command:
-      - mysqld
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --explicit_defaults_for_timestamp=1
+  auth-service:
+    image: d2-core/prototype-auth-service:1.0.0
     ports:
-      - "3306:3306"
+      - "8080:8080"
+    networks:
+      - prototype
     environment:
-      - MYSQL_USER=prototype
-      - MYSQL_PASSWORD=1234
-      - MYSQL_ROOT_PASSWORD=1234
-      - TZ=UTC
-    volumes:
-      - ./mysql/init:/docker-entrypoint-initdb.d
+      - SPRING_PROFILES_ACTIVE=local
+  event-service:
+    image: d2-core/prototype-event-service:1.0.0
+    ports:
+      - "8081:8080"
+    networks:
+      - prototype
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+  notification-service:
+    image: d2-core/prototype-notification-service:1.0.0
+    ports:
+      - "8082:8080"
+    networks:
+      - prototype
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+  product-service:
+    image: d2-core/prototype-product-service:1.0.0
+    ports:
+      - "8083:8080"
+    networks:
+      - prototype
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+
+networks:
+  prototype:
+    external: true
