@@ -7,6 +7,7 @@ services:
     networks:
       - prototype
     environment:
+      - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=local
   event-service:
     image: d2-core/prototype-event-service:1.0.0
@@ -15,6 +16,7 @@ services:
     networks:
       - prototype
     environment:
+      - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=local
   notification-service:
     image: d2-core/prototype-notification-service:1.0.0
@@ -23,6 +25,7 @@ services:
     networks:
       - prototype
     environment:
+      - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=local
   product-service:
     image: d2-core/prototype-product-service:1.0.0
@@ -31,6 +34,7 @@ services:
     networks:
       - prototype
     environment:
+      - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=local
 
 networks:

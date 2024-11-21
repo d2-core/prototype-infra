@@ -3,6 +3,7 @@ services:
   prototype-gateway:
     image: d2-core/prototype-gateway:1.0.0
     ports:
+      - SERVER_PORT=9090
       - "9090:9090"
     networks:
       - prototype
