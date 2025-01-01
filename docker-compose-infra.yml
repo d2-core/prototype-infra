@@ -1,14 +1,89 @@
 version: "3.7"
 services:
-  prototype-gateway:
-    image: d2-core/prototype-gateway:1.0.0
-    ports:
-      - SERVER_PORT=9090
-      - "9090:9090"
-    networks:
-      - prototype
+  # prototype-gateway:
+  #   image: d2-core/prototype-gateway:1.0.0
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     - prototype
+  #   environment:
+  #     - SERVER_PORT=9090
+  #     - SPRING_PROFILES_ACTIVE=local
+  #     - AUTH_HOST=auth-service
+  #     - AUTH_PORT=8080
+  #     - EVENT_HOST=event-service
+  #     - EVENT_PORT=8080
+  #     - NOTIFICATION_HOST=notification-service
+  #     - NOTIFICATION_PORT=8080
+  #     - PRODUCT_HOST=product-service
+  #     - PRODUCT_PORT=8080
+  #     - PROTOTYPE_BFF_APP_HOST=prototype-bff-app
+  #     - PROTOTYPE_BFF_APP_PORT=3000
+  #     - PROTOTYPE_BFF_ADMIN_HOST=prototype-bff-admin
+  #     - PROTOTYPE_BFF_ADMIN_PORT=3000
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
     environment:
-      - SPRING_PROFILES_ACTIVE=local
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "22181:2181"
+    networks:
+      - "prototype"
+    healthcheck:
+      test: nc -z localhost 2181 || exit 1
+      interval: 30s
+      timeout: 20s
+      retries: 5
+      start_period: 10s
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "19092:19092"
+    networks:
+      - "prototype"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:9092,EXTERNAL://localhost:19092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "19093:19093"
+    networks:
+      - "prototype"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-2:9092,EXTERNAL://localhost:19093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "19094:19094"
+    networks:
+      - "prototype"
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-3:9092,EXTERNAL://localhost:19094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
 
 networks:
   prototype:
