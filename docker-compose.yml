@@ -36,6 +36,18 @@ services:
     environment:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=local
+  prototype-bff-app:
+    image: d2-core/prototype-bff-app:1.0.0
+    ports:
+      - "3000:3000"
+    networks:
+      - prototype
+  prototype-bff-admin:
+    image: d2-core/prototype-bff-admin:1.0.0
+    ports:
+      - "3001:3000"
+    networks:
+      - prototype
 
 networks:
   prototype:
