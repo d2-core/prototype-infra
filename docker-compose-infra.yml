@@ -84,6 +84,14 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-3:9092,EXTERNAL://localhost:19094
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+  redis:
+    image: redis:7.2-alpine
+    command: redis-server --port 6380
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6380:6380
 
 networks:
   prototype:
